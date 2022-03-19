@@ -2,6 +2,7 @@ package bean.test;
 
 import bean.config.A;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * @Author Qiang.Qi
@@ -10,6 +11,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 public class StartTest {
 	public static void main(String[] args) {
 		AnnotationConfigApplicationContext annotationConfigApplicationContext = new AnnotationConfigApplicationContext(A.class);
+		ClassPathXmlApplicationContext classPathXmlApplicationContext = new ClassPathXmlApplicationContext();
 		A bean = annotationConfigApplicationContext.getBean(A.class);
 		System.out.println(bean);
 	}
