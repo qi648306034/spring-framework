@@ -10,9 +10,9 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  */
 public class StartTest {
 	public static void main(String[] args) {
-		AnnotationConfigApplicationContext annotationConfigApplicationContext = new AnnotationConfigApplicationContext(A.class);
-		ClassPathXmlApplicationContext classPathXmlApplicationContext = new ClassPathXmlApplicationContext();
-		A bean = annotationConfigApplicationContext.getBean(A.class);
+//		AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(A.class);
+		ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring-application-context.xml");
+		A bean = applicationContext.getBean(A.class);
 		System.out.println(bean);
 	}
 }
