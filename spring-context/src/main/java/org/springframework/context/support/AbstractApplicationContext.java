@@ -223,10 +223,11 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	private Set<ApplicationEvent> earlyApplicationEvents;
 
 
-	/**
+	/**创建一个无父类的AbstractApplicationContext对象
 	 * Create a new AbstractApplicationContext with no parent.
 	 */
 	public AbstractApplicationContext() {
+		//创建资源模式处理器 用来解析当前系统所需要的一些资源
 		this.resourcePatternResolver = getResourcePatternResolver();
 	}
 
@@ -597,10 +598,13 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 */
 	protected void prepareRefresh() {
 		// Switch to active.
+		//设置开始时间
 		this.startupDate = System.currentTimeMillis();
+		//设置容器关闭标志位
 		this.closed.set(false);
+		//设置容器激活标志位
 		this.active.set(true);
-
+		//记录日志
 		if (logger.isDebugEnabled()) {
 			if (logger.isTraceEnabled()) {
 				logger.trace("Refreshing " + this);
@@ -611,24 +615,29 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		}
 
 		// Initialize any placeholder property sources in the context environment.
+		//留给子类实现，初始化属性资源
 		initPropertySources();
 
 		// Validate that all properties marked as required are resolvable:
 		// see ConfigurablePropertyResolver#setRequiredProperties
+		//创建并获取环境对象，验证需要的属性资源是否已经放入到环境中
 		getEnvironment().validateRequiredProperties();
 
 		// Store pre-refresh ApplicationListeners...
+		//判断刷新前的应用程序监听器集合是否为空，如果为空，则将监听器添加到此集合中
 		if (this.earlyApplicationListeners == null) {
 			this.earlyApplicationListeners = new LinkedHashSet<>(this.applicationListeners);
 		}
 		else {
 			// Reset local application listeners to pre-refresh state.
+			//如果不为空，则清空集合元素对象
 			this.applicationListeners.clear();
 			this.applicationListeners.addAll(this.earlyApplicationListeners);
 		}
 
 		// Allow for the collection of early ApplicationEvents,
 		// to be published once the multicaster is available...
+		//创建刷新请的监听事件集合
 		this.earlyApplicationEvents = new LinkedHashSet<>();
 	}
 
