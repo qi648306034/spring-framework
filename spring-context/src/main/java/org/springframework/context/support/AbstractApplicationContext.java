@@ -520,7 +520,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			// Prepare this context for refreshing.
 			//刷新容器前的准备
 			//1.设置容器启动的时间
-			//2.设置活跃状态为true
+			//2.设置活跃状态为true 设置关闭状态fasle
 			//3.获取Evvironment的对象，并加载当前系统属性到Environment对象中
 			//4.准备监听器和时间的集合，默认为空的集合
 			prepareRefresh();
@@ -668,13 +668,18 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 */
 	protected void prepareBeanFactory(ConfigurableListableBeanFactory beanFactory) {
 		// Tell the internal bean factory to use the context's class loader etc.
+		//设置beanFactory的classLoader为当前context的classLoader
 		beanFactory.setBeanClassLoader(getClassLoader());
+		//设置beanFactory的表达试语言处理器
 		beanFactory.setBeanExpressionResolver(new StandardBeanExpressionResolver(beanFactory.getBeanClassLoader()));
+		//为beanFactory增加一个默认的propertyEditor，这个主要是对bean的属性设置管理的一个工具类
 		beanFactory.addPropertyEditorRegistrar(new ResourceEditorRegistrar(this, getEnvironment()));
 
 		// Configure the bean factory with context callbacks.
-		//设置或略的aware接口
+		//添加beanPostProcessor,ApplicationContextAwareProcessor此类用来完成某些Aware对象的注入
 		beanFactory.addBeanPostProcessor(new ApplicationContextAwareProcessor(this));
+		//设置或略的aware接口,这些接口的实现是由容器通过set方法进行注入的。
+		//所以在使用autowire进行注入的时候需要将这些接口进行忽略
 		beanFactory.ignoreDependencyInterface(EnvironmentAware.class);
 		beanFactory.ignoreDependencyInterface(EmbeddedValueResolverAware.class);
 		beanFactory.ignoreDependencyInterface(ResourceLoaderAware.class);
@@ -684,6 +689,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 		// BeanFactory interface not registered as resolvable type in a plain factory.
 		// MessageSource registered (and found for autowiring) as a bean.
+		//设置几个容器自动装配的特殊规则，当在进行iocc初始化的容器有多个实现，那么就使用指定对象进行注入
 		beanFactory.registerResolvableDependency(BeanFactory.class, beanFactory);
 		beanFactory.registerResolvableDependency(ResourceLoader.class, this);
 		beanFactory.registerResolvableDependency(ApplicationEventPublisher.class, this);
@@ -693,6 +699,9 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		beanFactory.addBeanPostProcessor(new ApplicationListenerDetector(this));
 
 		// Detect a LoadTimeWeaver and prepare for weaving, if found.
+		//增加对Aspertj的支持，在java中织入分为3种方式，分为编译期织入，类加载器织入，运行期织入，编译期织入是指在java编译器采用特殊的编译器，将切面织入到java类中，
+		//类加载期织入是指通过特殊的类加载器，在类字节码加载到JVM时，织入切面，运行期织入则时采用cglib和jdk进行切面织入
+		//asspetj提供李两种织入方式，第一种时通过特殊编译器，在编译器，将aspectj语言编写的切面类织入到java类中，第二种时将类加载期织入，就是下面的load time weaving
 		if (beanFactory.containsBean(LOAD_TIME_WEAVER_BEAN_NAME)) {
 			beanFactory.addBeanPostProcessor(new LoadTimeWeaverAwareProcessor(beanFactory));
 			// Set a temporary ClassLoader for type matching.
