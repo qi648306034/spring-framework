@@ -57,14 +57,25 @@ final class PostProcessorRegistrationDelegate {
 			ConfigurableListableBeanFactory beanFactory, List<BeanFactoryPostProcessor> beanFactoryPostProcessors) {
 
 		// Invoke BeanDefinitionRegistryPostProcessors first, if any.
+		//无论是什么情况，有限执行BeanDefinitionRegistryPostProcessors
+		//将一级执行过的BFPP存储在processedBans中，防止重复执行
 		Set<String> processedBeans = new HashSet<>();
 
+		//判断beanfactory是否是BeanDefinitionRegistry类型，此处是DefaultLstableBeanFactory,实现了BeanDefinitionRegistry接口，所以未true
 		if (beanFactory instanceof BeanDefinitionRegistry) {
+			//类型转换
 			BeanDefinitionRegistry registry = (BeanDefinitionRegistry) beanFactory;
+			//此处注意区分 BeanDefinitionRegistryPostProcess是BeanFactoryPostProcessor的子类
+			//BeanFactoryPostProcessor主要针对的是操作对象是BeanFactory,而BeanDefinitionRegistryPostProcessor主要针对的操作对象是BeanDefinition
+			//存放BeanFactoryPostProcessor的集合
 			List<BeanFactoryPostProcessor> regularPostProcessors = new ArrayList<>();
+			//存放BeanDefinitionRegistryPostProcessor的集合
 			List<BeanDefinitionRegistryPostProcessor> registryProcessors = new ArrayList<>();
 
+			//首先处理入参中的BeanFactoryPostProcessors,遍历所有的beanFactoryPostProcessors,将BeanDefinitionRegistryPostProcessor
+			//和BeanFactoryPostProcessor区分开
 			for (BeanFactoryPostProcessor postProcessor : beanFactoryPostProcessors) {
+				//如果是BeanDefinitionRegistryPostProcessor
 				if (postProcessor instanceof BeanDefinitionRegistryPostProcessor) {
 					BeanDefinitionRegistryPostProcessor registryProcessor =
 							(BeanDefinitionRegistryPostProcessor) postProcessor;
