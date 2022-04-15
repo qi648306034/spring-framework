@@ -4,7 +4,8 @@
 	   xmlns:p="http://www.springframework.org/schema/p"
 	   xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
-<bean id="a" class="bean.config.A">
+<bean id="a" class="bean.config.A"/>
+<bean id="p" class="bean.entity.Person"/>
+<bean id="c" class="bean.entity.Student"/>
 
-</bean>
 </beans>

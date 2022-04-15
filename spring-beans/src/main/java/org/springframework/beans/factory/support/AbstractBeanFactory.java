@@ -199,6 +199,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 	@Override
 	public Object getBean(String name) throws BeansException {
+		//此方法是实际获取Bean的方法，也是出发依赖注入的方法
 		return doGetBean(name, null, null, false);
 	}
 
@@ -318,7 +319,9 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				}
 
 				// Create bean instance.
+				//创建bean实列对象
 				if (mbd.isSingleton()) {
+					//返回beanName的原始实列单例对象，如果没有注册，则使用singletonFactory创建并注册一个对象；
 					sharedInstance = getSingleton(beanName, () -> {
 						try {
 							return createBean(beanName, mbd, args);

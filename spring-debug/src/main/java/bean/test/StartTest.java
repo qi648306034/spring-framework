@@ -1,8 +1,11 @@
 package bean.test;
 
 import bean.config.A;
+import bean.entity.Person;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import java.util.Date;
 
 /**
  * @Author Qiang.Qi
@@ -13,6 +16,6 @@ public class StartTest {
 //		AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(A.class);
 		ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring-application-context.xml");
 		A bean = applicationContext.getBean(A.class);
-		System.out.println(bean);
+//		Person p = applicationContext.getBean(Person.class);
 	}
 }
